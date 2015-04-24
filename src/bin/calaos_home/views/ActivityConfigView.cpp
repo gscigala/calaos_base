@@ -28,7 +28,7 @@ ActivityConfigView::ActivityConfigView(Evas *_e, Evas_Object *_parent):
     contentView = new MainContentView(evas, parent);
     Swallow(contentView->getSmartObject(), "calaos.main.content");
 
-    Evas_Object *btn = edje_object_part_external_object_get(edje, "button.back");
+    Evas_Object *btn = edje_object_part_external_object_get(elm_layout_edje_get(layout), "button.back");
     elm_object_text_set(btn, _("Back to menu"));
 
     addCallback("button.*", "pressed", sigc::mem_fun(*this, &ActivityConfigView::buttonPressed));

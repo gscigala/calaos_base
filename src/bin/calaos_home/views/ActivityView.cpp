@@ -71,9 +71,9 @@ ActivityView::ActivityView(Evas *_e, Evas_Object *_parent, string _collection):
         throw;
     }
 
-    if (edje_object_part_exists(edje, "button.quit"))
+    if (edje_object_part_exists(elm_layout_edje_get(layout), "button.quit"))
     {
-        button_quit = edje_object_part_external_object_get(edje, "button.quit");
+        button_quit = edje_object_part_external_object_get(elm_layout_edje_get(layout), "button.quit");
         elm_object_text_set(button_quit, _("Quit"));
         evas_object_smart_callback_add(button_quit, "clicked", _elm_button_quit, this);
     }

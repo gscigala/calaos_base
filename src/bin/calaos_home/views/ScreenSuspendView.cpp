@@ -33,7 +33,7 @@ ScreenSuspendView::ScreenSuspendView(Evas *_e, Evas_Object *p):
     EdjeObject(ApplicationMain::getTheme(), _e),
     parent(p)
 {
-    evas_object_data_set(edje, "ScreenSuspendView", this);
+    evas_object_data_set(layout, "ScreenSuspendView", this);
 
     try
     {

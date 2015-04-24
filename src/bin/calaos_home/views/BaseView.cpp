@@ -27,7 +27,7 @@ BaseView::BaseView(Evas *_e, Evas_Object *_p):
     parent(_p),
     controller(NULL)
 {
-    evas_object_data_set(edje, "BaseView", this);
+    evas_object_data_set(layout, "BaseView", this);
 }
 
 BaseView::~BaseView()

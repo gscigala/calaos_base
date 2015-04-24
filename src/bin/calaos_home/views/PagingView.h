@@ -24,7 +24,7 @@
 #include <BaseView.h>
 
 #define CHECK_SCROLL_RETURN(...) \
-    if (!edje) \
+    if (!layout) \
 { \
     cCritical() <<  "PagingView: Scroller object NULL !"; \
     return __VA_ARGS__; \

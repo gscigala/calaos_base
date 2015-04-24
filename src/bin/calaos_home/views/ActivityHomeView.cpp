@@ -70,13 +70,13 @@ ActivityHomeView::ActivityHomeView(Evas *_e, Evas_Object *_parent):
     page_view->drag_start.connect(sigc::mem_fun(*this, &ActivityHomeView::pagerDragStart));
     page_view->drag_stop.connect(sigc::mem_fun(*this, &ActivityHomeView::pagerDragStop));
 
-    Evas_Object *btn = edje_object_part_external_object_get(edje, "button.back");
+    Evas_Object *btn = edje_object_part_external_object_get(elm_layout_edje_get(layout), "button.back");
     elm_object_text_set(btn, _("Back to menu"));
 
-    btn = edje_object_part_external_object_get(edje, "button.quit");
+    btn = edje_object_part_external_object_get(elm_layout_edje_get(layout), "button.quit");
     elm_object_text_set(btn, _("Quit"));
 
-    btn = edje_object_part_external_object_get(edje, "button.save");
+    btn = edje_object_part_external_object_get(elm_layout_edje_get(layout), "button.save");
     elm_object_text_set(btn, _("Save room state"));
 
     addCallback("home", "*", sigc::mem_fun(*this, &ActivityHomeView::EdjeCallback));

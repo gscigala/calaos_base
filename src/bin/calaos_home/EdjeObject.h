@@ -24,6 +24,7 @@
 
 #include <Evas.h>
 #include <Edje.h>
+#include <Elementary.h>
 #include <Utils.h>
 #include <CommonUtils.h>
 
@@ -45,7 +46,7 @@ typedef struct _EdjeCallbackData: public sigc::trackable
 } EdjeCallbackData;
 
 #define CHECK_EDJE_RETURN(...) \
-    if (!edje) \
+    if (!layout) \
 { \
     cCritical() <<  "EdjeObject: Edje object NULL ! (" << collection  << ")"; \
     return __VA_ARGS__; \
@@ -63,7 +64,7 @@ protected:
     string collection; //Edje collection group
 
     Evas *evas;
-    Evas_Object *edje; //The edje object
+    Evas_Object *layout; //The elm object
 
     vector<EdjeCallbackData *> callbacks;
 
@@ -84,30 +85,30 @@ public:
     //load the edje file
     bool LoadEdje(string collection);
 
-    virtual void Show() { CHECK_EDJE_RETURN() evas_object_show(edje); }
-    virtual void Hide() { CHECK_EDJE_RETURN() evas_object_hide(edje); }
-    void Move(int x, int y) { CHECK_EDJE_RETURN() evas_object_move(edje, x, y); }
-    void Resize(int w, int h) { CHECK_EDJE_RETURN() evas_object_resize(edje, w, h); }
+    virtual void Show() { CHECK_EDJE_RETURN() evas_object_show(layout); }
+    virtual void Hide() { CHECK_EDJE_RETURN() evas_object_hide(layout); }
+    void Move(int x, int y) { CHECK_EDJE_RETURN() evas_object_move(layout, x, y); }
+    void Resize(int w, int h) { CHECK_EDJE_RETURN() evas_object_resize(layout, w, h); }
 
     void getGeometry(int *x, int *y, int *w, int *h);
-    void getSizeMin(int *w, int *h) { CHECK_EDJE_RETURN() edje_object_size_min_get(edje, w, h); }
-    void getSizeMax(int *w, int *h) { CHECK_EDJE_RETURN() edje_object_size_max_get(edje, w, h); }
+    void getSizeMin(int *w, int *h) { CHECK_EDJE_RETURN() edje_object_size_min_get(elm_layout_edje_get(layout), w, h); }
+    void getSizeMax(int *w, int *h) { CHECK_EDJE_RETURN() edje_object_size_max_get(elm_layout_edje_get(layout), w, h); }
 
-    void setLayer(int i) { CHECK_EDJE_RETURN() evas_object_layer_set(edje, i); }
-    int getLayer() { CHECK_EDJE_RETURN(0) return evas_object_layer_get(edje); }
+    void setLayer(int i) { CHECK_EDJE_RETURN() evas_object_layer_set(elm_layout_edje_get(layout), i); }
+    int getLayer() { CHECK_EDJE_RETURN(0) return evas_object_layer_get(elm_layout_edje_get(layout)); }
 
-    void EmitSignal(string signal, string source) { CHECK_EDJE_RETURN() edje_object_signal_emit(edje, signal.c_str(), source.c_str()); }
+    void EmitSignal(string signal, string source) { CHECK_EDJE_RETURN() elm_layout_signal_emit(layout, signal.c_str(), source.c_str()); }
 
-    void setPartText(string part, string text) { CHECK_EDJE_RETURN() edje_object_part_text_set(edje, part.c_str(), text.c_str()); }
+    void setPartText(string part, string text) { CHECK_EDJE_RETURN() elm_layout_text_set(layout, part.c_str(), text.c_str()); }
     string getPartText(string part);
 
-    void setDragValue(string part, double x, double y) { CHECK_EDJE_RETURN() edje_object_part_drag_value_set(edje, part.c_str(), x, y); }
-    void getDragValue(string part, double *x, double *y) { CHECK_EDJE_RETURN() edje_object_part_drag_value_get(edje, part.c_str(), x, y); }
+    void setDragValue(string part, double x, double y) { CHECK_EDJE_RETURN() edje_object_part_drag_value_set(elm_layout_edje_get(layout), part.c_str(), x, y); }
+    void getDragValue(string part, double *x, double *y) { CHECK_EDJE_RETURN() edje_object_part_drag_value_get(elm_layout_edje_get(layout), part.c_str(), x, y); }
 
     void Swallow(EdjeObject *obj, string part, bool delete_on_del = false);
     void Swallow(Evas_Object *obj, string part, bool delete_on_del = false);
 
-    Evas_Object *getEvasObject() { CHECK_EDJE_RETURN(NULL) return edje; }
+    Evas_Object *getEvasObject() { CHECK_EDJE_RETURN(NULL) return layout; }
 
     void setTheme(string &_theme) { theme = _theme; }
 

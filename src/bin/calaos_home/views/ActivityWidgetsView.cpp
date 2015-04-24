@@ -40,8 +40,8 @@ ActivityWidgetsView::ActivityWidgetsView(Evas *_e, Evas_Object *_parent):
 
     Swallow(clipper, "widgets.swallow", true);
 
-    evas_object_event_callback_add(edje, EVAS_CALLBACK_MOVE, _view_move, this);
-    evas_object_event_callback_add(edje, EVAS_CALLBACK_RESIZE, _view_move, this);
+    evas_object_event_callback_add(elm_layout_edje_get(layout), EVAS_CALLBACK_MOVE, _view_move, this);
+    evas_object_event_callback_add(elm_layout_edje_get(layout), EVAS_CALLBACK_RESIZE, _view_move, this);
 
     //Create a temporary dir for modules
     if (ecore_file_is_dir("/tmp/calaos_widgets"))

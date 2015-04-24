@@ -31,13 +31,13 @@ EdjeObject::EdjeObject(string &_theme, Evas *_evas):
     autodelete(false)
 {
     //create the edje object
-    edje = edje_object_add(evas);
+    layout = elm_layout_add(evas);
 
-    evas_object_event_callback_add(edje, EVAS_CALLBACK_DEL, _edje_del, this);
-    evas_object_event_callback_add(edje, EVAS_CALLBACK_SHOW, _edje_show, this);
-    evas_object_event_callback_add(edje, EVAS_CALLBACK_HIDE, _edje_hide, this);
+    evas_object_event_callback_add(elm_layout_edje_get(layout), EVAS_CALLBACK_DEL, _edje_del, this);
+    evas_object_event_callback_add(elm_layout_edje_get(layout), EVAS_CALLBACK_SHOW, _edje_show, this);
+    evas_object_event_callback_add(elm_layout_edje_get(layout), EVAS_CALLBACK_HIDE, _edje_hide, this);
 
-    evas_object_data_set(edje, "EdjeObject", this);
+    evas_object_data_set(layout, "EdjeObject", this);
 
     // Add an automatic callback that triggers the object_signal for all signals (*, *)
     addCallback("*", "*", sigc::mem_fun(object_signal, &sigc::signal<void, void *, Evas_Object *, std::string, std::string>::emit));
@@ -49,13 +49,13 @@ EdjeObject::EdjeObject(const char *_theme, Evas *_evas):
     autodelete(false)
 {
     //create the edje object
-    edje = edje_object_add(evas);
+    layout = elm_layout_add(evas);
 
-    evas_object_event_callback_add(edje, EVAS_CALLBACK_DEL, _edje_del, this);
-    evas_object_event_callback_add(edje, EVAS_CALLBACK_SHOW, _edje_show, this);
-    evas_object_event_callback_add(edje, EVAS_CALLBACK_HIDE, _edje_hide, this);
+    evas_object_event_callback_add(elm_layout_edje_get(layout), EVAS_CALLBACK_DEL, _edje_del, this);
+    evas_object_event_callback_add(elm_layout_edje_get(layout), EVAS_CALLBACK_SHOW, _edje_show, this);
+    evas_object_event_callback_add(elm_layout_edje_get(layout), EVAS_CALLBACK_HIDE, _edje_hide, this);
 
-    evas_object_data_set(edje, "EdjeObject", this);
+    evas_object_data_set(layout, "EdjeObject", this);
 
     // Add an automatic callback that triggers the object_signal for all signals (*, *)
     addCallback("*", "*", sigc::mem_fun(object_signal, &sigc::signal<void, void *, Evas_Object *, std::string, std::string>::emit));
@@ -72,16 +72,16 @@ EdjeObject::~EdjeObject()
     for (;callbacks.size() > 0 && iter != callbacks.end();iter++)
     {
         EdjeCallbackData *data = *iter;
-        if (edje)
-            edje_object_signal_callback_del(edje, data->signal.c_str(), data->source.c_str(), _edje_object_signal_cb);
+        if (layout)
+            elm_layout_signal_callback_del(layout, data->signal.c_str(), data->source.c_str(), _edje_object_signal_cb);
 
         delete data;
     }
     callbacks.clear();
 
-    if (edje)
+    if (layout)
     {
-        void *data = evas_object_event_callback_del_full(edje, EVAS_CALLBACK_DEL, _edje_del, this);
+        void *data = evas_object_event_callback_del_full(elm_layout_edje_get(layout), EVAS_CALLBACK_DEL, _edje_del, this);
         if (!data)
             cCritical() <<  "EdjeObject::~EdjeObject : Something went wrong with callback deletion !";
 
@@ -89,17 +89,17 @@ EdjeObject::~EdjeObject()
         objectDeleted();
         object_deleted.emit();
     }
-    DELETE_NULL_FUNC(evas_object_del, edje)
+    DELETE_NULL_FUNC(evas_object_del, layout)
 }
 
 bool EdjeObject::LoadEdje(string c)
 {
-    CHECK_EDJE_RETURN(false)
+    CHECK_EDJE_RETURN(false);
 
-            collection = c;
-    if (edje_object_file_set(edje, theme.c_str(), collection.c_str()) == 0)
+    collection = c;
+    if (elm_layout_file_set(layout, theme.c_str(), collection.c_str()) == 0)
     {
-        int err = edje_object_load_error_get(edje);
+        int err = edje_object_load_error_get(elm_layout_edje_get(layout));
         string serr = "EdjeObject::LoadEdje(" + theme + ", " + collection + ") - ";
         switch (err)
         {
@@ -126,16 +126,16 @@ bool EdjeObject::LoadEdje(string c)
 
 void EdjeObject::getGeometry(int *x, int *y, int *w, int *h)
 {
-    CHECK_EDJE_RETURN()
+    CHECK_EDJE_RETURN();
 
-            evas_object_geometry_get(edje, x, y, w, h);
+    evas_object_geometry_get(elm_layout_edje_get(layout), x, y, w, h);
 }
 
 string EdjeObject::getPartText(string part)
 {
-    CHECK_EDJE_RETURN("")
+    CHECK_EDJE_RETURN("");
 
-            const char *txt = edje_object_part_text_get(edje, part.c_str());
+    const char *txt = elm_layout_text_get(layout, part.c_str());
     if (txt)
         return string(txt);
 
@@ -145,7 +145,7 @@ string EdjeObject::getPartText(string part)
 void EdjeObject::Swallow(EdjeObject *obj, string part, bool delete_on_del)
 {
     CHECK_EDJE_RETURN();
-    edje_object_part_swallow(edje, part.c_str(), obj->getEvasObject());
+    elm_layout_content_set(layout, part.c_str(), obj->getEvasObject());
 
     if (delete_on_del)
         swallow_eobjs.push_back(obj);
@@ -154,7 +154,7 @@ void EdjeObject::Swallow(EdjeObject *obj, string part, bool delete_on_del)
 void EdjeObject::Swallow(Evas_Object *obj, string part, bool delete_on_del)
 {
     CHECK_EDJE_RETURN();
-    edje_object_part_swallow(edje, part.c_str(), obj);
+    elm_layout_content_set(layout, part.c_str(), obj);
 
     if (delete_on_del)
         swallow_objs.push_back(obj);
@@ -173,7 +173,7 @@ sigc::connection *EdjeObject::addCallback(string source, string signal, EdjeCall
 
     callbacks.push_back(data);
 
-    edje_object_signal_callback_add(edje, signal.c_str(), source.c_str(), _edje_object_signal_cb, data);
+    elm_layout_signal_callback_add(layout, signal.c_str(), source.c_str(), _edje_object_signal_cb, data);
 
     return &data->connection;
 }
@@ -189,7 +189,7 @@ void EdjeObject::delCallback(sigc::connection *connection)
         EdjeCallbackData *data = *iter;
         if (&data->connection == connection)
         {
-            edje_object_signal_callback_del(edje, data->signal.c_str(), data->source.c_str(), _edje_object_signal_cb);
+            elm_layout_signal_callback_del(layout, data->signal.c_str(), data->source.c_str(), _edje_object_signal_cb);
 
             delete data;
             callbacks.erase(iter);
@@ -203,7 +203,7 @@ void EdjeObject::_evasObjectDeleted()
 {
     for_each(callbacks.begin(), callbacks.end(), Delete());
 
-    edje = NULL;
+    layout = NULL;
 
     objectDeleted();
     object_deleted.emit();

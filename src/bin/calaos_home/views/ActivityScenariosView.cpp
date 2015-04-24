@@ -42,22 +42,22 @@ ActivityScenariosView::ActivityScenariosView(Evas *_e, Evas_Object *_parent):
     elm_genlist_homogeneous_set(scenario_list, true);
     evas_object_show(scenario_list);
 
-    Evas_Object *btn = edje_object_part_external_object_get(edje, "button.calendar.today");
+    Evas_Object *btn = edje_object_part_external_object_get(elm_layout_edje_get(layout), "button.calendar.today");
     elm_object_text_set(btn, _("Today"));
 
-    btn = edje_object_part_external_object_get(edje, "button.create");
+    btn = edje_object_part_external_object_get(elm_layout_edje_get(layout), "button.create");
     elm_object_text_set(btn, _("Create a new scenario"));
 
-    btn = edje_object_part_external_object_get(edje, "button.list.all");
+    btn = edje_object_part_external_object_get(elm_layout_edje_get(layout), "button.list.all");
     elm_object_text_set(btn, _("All"));
 
-    btn = edje_object_part_external_object_get(edje, "button.list.light");
+    btn = edje_object_part_external_object_get(elm_layout_edje_get(layout), "button.list.light");
     elm_object_text_set(btn, _("Lights"));
 
-    btn = edje_object_part_external_object_get(edje, "button.list.shutters");
+    btn = edje_object_part_external_object_get(elm_layout_edje_get(layout), "button.list.shutters");
     elm_object_text_set(btn, _("Shutters"));
 
-    btn = edje_object_part_external_object_get(edje, "button.list.schedule");
+    btn = edje_object_part_external_object_get(elm_layout_edje_get(layout), "button.list.schedule");
     elm_object_text_set(btn, _("Scheduled"));
 
     //default to today

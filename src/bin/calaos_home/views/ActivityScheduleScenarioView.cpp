@@ -151,10 +151,10 @@ ActivityScheduleScenarioView::ActivityScheduleScenarioView(Evas *_e, Evas_Object
 //    for (uint i = 0;i < items_periods.size();i++)
 //        items_periods[i]->item_selected.connect(sigc::bind(sigc::mem_fun(*this, &ActivityScheduleScenarioView::itemPeriodSelected), items_periods[i]));
 
-    Evas_Object *btn = edje_object_part_external_object_get(edje, "button.valid");
+    Evas_Object *btn = edje_object_part_external_object_get(elm_layout_edje_get(layout), "button.valid");
     elm_object_text_set(btn, _("Apply"));
 
-    btn = edje_object_part_external_object_get(edje, "button.add");
+    btn = edje_object_part_external_object_get(elm_layout_edje_get(layout), "button.add");
     elm_object_text_set(btn, _("Add"));
 
     setPartText("hours_text", _("<big><disabled>Hours of execution</disabled></big>"));

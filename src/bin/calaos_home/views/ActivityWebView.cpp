@@ -116,22 +116,22 @@ ActivityWebView::ActivityWebView(Evas *_e, Evas_Object *_parent):
         goToCallback(DEFAULT_BROWSER_URL);
     }
 
-    Evas_Object *btn = edje_object_part_external_object_get(edje, "button.back");
+    Evas_Object *btn = edje_object_part_external_object_get(elm_layout_edje_get(layout), "button.back");
     elm_object_text_set(btn, _("Back to menu"));
 
-    btn = edje_object_part_external_object_get(edje, "button.reload");
+    btn = edje_object_part_external_object_get(elm_layout_edje_get(layout), "button.reload");
     elm_object_text_set(btn, _("Reload"));
 
-    btn = edje_object_part_external_object_get(edje, "button.stop");
+    btn = edje_object_part_external_object_get(elm_layout_edje_get(layout), "button.stop");
     elm_object_text_set(btn, _("Stop"));
 
-    btn = edje_object_part_external_object_get(edje, "button.home");
+    btn = edje_object_part_external_object_get(elm_layout_edje_get(layout), "button.home");
     elm_object_text_set(btn, _("Home page"));
 
-    btn = edje_object_part_external_object_get(edje, "button.go");
+    btn = edje_object_part_external_object_get(elm_layout_edje_get(layout), "button.go");
     elm_object_text_set(btn, _("Go to..."));
 
-    btn = edje_object_part_external_object_get(edje, "button.bookmark");
+    btn = edje_object_part_external_object_get(elm_layout_edje_get(layout), "button.bookmark");
     elm_object_text_set(btn, _("Add to favorites"));
 
     addCallback("button.*", "pressed", sigc::mem_fun(*this, &ActivityWebView::buttonCallback));

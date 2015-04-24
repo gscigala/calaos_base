@@ -80,7 +80,7 @@ Widget::Widget(string &_theme, Evas *_evas, ModuleDef &_mtype, string _id, Evas_
         exit(1);
     }
 
-    edje_object_signal_callback_add(edje, "*", "*", _edje_widget_cb, this);
+    elm_layout_signal_callback_add(layout, "*", "*", _edje_widget_cb, this);
 
     if (!ModuleManager::Instance().createModuleInstance(evas, _mtype, mdef, id))
     {
@@ -97,7 +97,7 @@ Widget::Widget(string &_theme, Evas *_evas, ModuleDef &_mtype, string _id, Evas_
     }
 
     Evas_Object *o = module->getEvasObject();
-    edje_object_part_swallow(edje, "widget", o);
+    elm_layout_content_set(layout, "widget", o);
 
     evas_object_show(o);
 
@@ -121,7 +121,7 @@ Widget::Widget(string &_theme, Evas *_evas, ModuleDef &_mtype, string _id, Evas_
     evas_object_event_callback_add(resize_box, EVAS_CALLBACK_MOUSE_UP,
                                    _evas_resize_stop_cb, this);
 
-    edje_object_part_swallow(edje, "widget.resize.bloc", resize_box);
+    elm_layout_content_set(layout, "widget.resize.bloc", resize_box);
 
     int w, h;
     module->getSizeMin(w, h);
@@ -242,13 +242,13 @@ void Widget::deleteCancel(void *data)
 
 void Widget::Show()
 {
-    edje_object_signal_emit(edje, "show", "calaos");
+    elm_layout_signal_emit(layout, "show", "calaos");
     EdjeObject::Show();
 }
 
 void Widget::Hide()
 {
-    edje_object_signal_emit(edje, "hide", "calaos");
+    elm_layout_signal_emit(layout, "hide", "calaos");
     EdjeObject::Hide();
 }
 
@@ -290,7 +290,7 @@ void Widget::Resize(int w, int h)
 void Widget::EditMode()
 {
     evas_object_show(move_box);
-    edje_object_signal_emit(edje, "widget,edit", "calaos");
+    elm_layout_signal_emit(layout, "widget,edit", "calaos");
 
     CalaosModuleBase *module = ModuleManager::Instance().getModuleInstance(mdef);
     int minw, minh, maxw, maxh;
@@ -298,7 +298,7 @@ void Widget::EditMode()
     module->getSizeMax(maxw, maxh);
 
     if (minw != maxw || minh != maxh)
-        edje_object_signal_emit(edje, "widget,resizable", "calaos");
+        elm_layout_signal_emit(layout, "widget,resizable", "calaos");
 
     getGeometry(&old_x, &old_y, &old_w, &old_h);
 }
@@ -306,7 +306,7 @@ void Widget::EditMode()
 void Widget::NormalMode()
 {
     evas_object_hide(move_box);
-    edje_object_signal_emit(edje, "widget,normal", "calaos");
+    elm_layout_signal_emit(layout, "widget,normal", "calaos");
 }
 
 void Widget::Reset()
