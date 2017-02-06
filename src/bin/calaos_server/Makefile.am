@@ -80,6 +80,10 @@ calaos_server_SOURCES = \
         HttpServer.h                                    \
 	IO/AnalogIO.cpp                                 \
 	IO/AnalogIO.h                                   \
+        IO/BluetoothLowEnergy/BLECtrl.cpp               \
+        IO/BluetoothLowEnergy/BLECtrl.h                 \
+        IO/BluetoothLowEnergy/BLETemp.cpp               \
+        IO/BluetoothLowEnergy/BLETemp.h                 \
 	IO/ExternProc.cpp                               \
         IO/ExternProc.h                                 \
         IO/Gpio/GpioCtrl.cpp                            \
@@ -388,6 +392,16 @@ calaos_1wire_SOURCES = \
 	IO/OneWire/OWExternProc_main.cpp
 
 calaos_1wire_LDADD = \
+	@CALAOS_SERVER_LIBS@ \
+	$(top_builddir)/src/lib/libcalaos_common.la
+
+bin_PROGRAMS += calaos_ble
+calaos_ble_SOURCES = \
+	IO/ExternProc.cpp				\
+	IO/ExternProc.h  				\
+	IO/OneWire/OWExternProc_main.cpp
+
+calaos_ble_LDADD = \
 	@CALAOS_SERVER_LIBS@ \
 	$(top_builddir)/src/lib/libcalaos_common.la
 
